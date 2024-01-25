@@ -8,6 +8,10 @@ int main() {
     std::cout << "Enter a number: " << std::endl;
     std::cin >> number;
 
-    std::cout << "The sum is " << sum << "!" << std::endl;
+    for (int i = 1; i<=number; i++) {
+        sum += i;
+    }
+
+    std::cout << "The sum from 1 to " << number << " is " << sum << std::endl;
     return 0;
 }
