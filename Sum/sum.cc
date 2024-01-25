@@ -14,11 +14,14 @@ int main() {
     std::cout << "Enter a number: " << std::endl;
     std::cin >> number;
 
-    if (number >= 1) {
-        std::cout << "The sum from 1 to " << number << " is " << sumar(number) << std::endl;
-    } else
+    while (number < 1)
     {
         std::cout << "You must enter a positive number." << std::endl;
-    }    
+        std::cout << "Enter a number: " << std::endl;
+        std::cin >> number;
+    }
+    
+    std::cout << "The sum from 1 to " << number << " is " << sumar(number) << std::endl;
+
     return 0;
 }
