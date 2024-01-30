@@ -15,6 +15,14 @@ int main() {
 
     std::cout << "Enter b number >= 1: " << std::endl;
     std::cin >> b;
+    while (b<1)
+    {
+        std::cout << "Enter b number >= 1: " << std::endl;
+        std::cin >> b;
+    }
+    
+
+    std::cin >> b;
 
     for (int num_act = a; num_act<=b; num_act++) {
         sum += num_act;
