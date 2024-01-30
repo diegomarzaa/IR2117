@@ -6,6 +6,12 @@ int main() {
     int sum = 0;
     std::cout << "Enter a number >= 1: " << std::endl;
     std::cin >> a;
+    while (a<1)
+    {
+        std::cout << "Enter a number >= 1: " << std::endl;
+        std::cin >> a;
+    }
+    
 
     std::cout << "Enter b number >= 1: " << std::endl;
     std::cin >> b;
