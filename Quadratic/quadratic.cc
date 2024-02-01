@@ -4,19 +4,17 @@
 int main() 
 {
   double a, b, c;
-
   std::cout << "Introduce el coeficiente a: ";
   std::cin >> a;
-
   std::cout << "Introduce el coeficiente b: ";
   std::cin >> b;
-  
   std::cout << "Introduce el coeficiente c: ";
   std::cin >> c;
   
-  double solucion = 0;
+  double discriminante = b*b - 4*a*c;
+  double x1 = (-b + sqrt(discriminante))/(2*a);
+  double x2 = (-b - sqrt(discriminante))/(2*a);
 
-  std::cout << "La solución es: " << solucion << std::endl;
-
+  std::cout << "Las soluciones son: " << x1 << " y " << x2 << std::endl;
   return 0;
 }
