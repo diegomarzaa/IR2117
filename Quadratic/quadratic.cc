@@ -12,6 +12,12 @@ int main()
   std::cin >> c;
   
   double discriminante = b*b - 4*a*c;
+
+  if (discriminante < 0) {
+    std::cout << "No hay soluciones reales" << std::endl;
+    return 1;
+  }
+
   double x1 = (-b + sqrt(discriminante))/(2*a);
   double x2 = (-b - sqrt(discriminante))/(2*a);
 
