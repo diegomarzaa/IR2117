@@ -35,8 +35,13 @@ int main() {
 
     if (input.empty()) break;
 
-    double numero = std::stod(input);
-    lista.push_back(numero);
+    // Si no s'introdueix un valor numèric, demanar de nou.
+    try {
+      double numero = std::stod(input);
+      lista.push_back(numero);
+    } catch (std::invalid_argument&) {
+      std::cout << "Valor invàlid, no s'ha guardat." << std::endl;
+    }
   }
 
   std::cout << "La lista es:\n[";
