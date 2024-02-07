@@ -1,3 +1,10 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <map>
+
 // CÀLCUL D'ESTADÍSTICS A PARTIR DE VALORS
 
 // ---------- estadístics - Versió 1
@@ -20,17 +27,142 @@
 // Mostrar estadístics.
 // Eixir.
 
-#include <iostream>
-#include <string>
-#include <vector>
+
+double calcular_mitjana(const std::vector<double>& llista_dades) {
+  double total = 0;
+  int tamany = llista_dades.size();
+
+  for (double num : llista_dades) {
+    total += num;
+  }
+  return total / tamany;
+}
+
+double calcular_moda(const std::vector<double>& llista_dades) {
+  std::map<double, int> frequencies;
+  for (double num : llista_dades) {
+    frequencies[num]++;
+  }
+
+  double moda = 0;
+  int cant_max = 0;
+
+  for (auto parella : frequencies) {
+    if (parella.second > cant_max) {
+      moda = parella.first;
+      cant_max = parella.second;
+    }
+  }
+
+  return moda;
+}
+
+
+double calcular_desviacio_tipica(const std::vector<double>& llista_dades, double mitjana) {
+    double total = 0;
+    int tamany = llista_dades.size();
+
+    for (double num : llista_dades) {
+      total += (num - mitjana) * (num - mitjana);
+    }
+    return std::sqrt(total / tamany);
+}
+
+double calcular_maxim(const std::vector<double>& llista_dades) {
+  double max = llista_dades[0];
+  for (double num : llista_dades) {
+    if (num > max) {
+      max = num;
+    }
+  }
+  return max;
+}
+
+double calcular_minim(const std::vector<double>& llista_dades) {
+  double min = llista_dades[0];
+  for (double num : llista_dades) {
+    if (num < min) {
+      min = num;
+    }
+  }
+  return min;
+}
+
+double calcular_quartil(
+  const std::vector<double>& llista_dades, double quartil) {
+  
+  int tamany = llista_dades.size();
+  int posicio_quartil = quartil * (tamany + 1);
+
+  // Ordenar la llista.
+  std::vector<double> llista_ordenada = llista_dades;
+  std::sort(llista_ordenada.begin(), llista_ordenada.end());
+
+  // Tornar el valor corresponent al quartil.
+  return llista_ordenada[posicio_quartil - 1];
+}
+
+void mostrar_llista(const std::vector<double>& llista_dades) {
+  // Mostrar llista final.
+  std::cout << "####### Llista de dades #######\n[\n";
+
+  for (int i = 0; i < llista_dades.size(); i++) {
+    std::cout << "\t" << llista_dades[i];
+    if (i < llista_dades.size() - 1) {
+      std::cout << ",\n";
+    } else {
+      std::cout << "\n";
+    }
+  }
+
+  std::cout << "]" << std::endl << std::endl;
+}
+
+void mostrar_taula(const std::vector<double>& llista_dades) {
+  std::vector<double> llista_ordenada = llista_dades;
+  std::sort(llista_ordenada.begin(), llista_ordenada.end());
+  std::vector<double> valors;
+  std::vector<int> freq;
+
+  double tamany = llista_dades.size();
+
+  for (int i = 0; i < llista_ordenada.size(); i++) {
+    if (i == 0 or llista_ordenada[i] != llista_ordenada[i - 1]) {
+      valors.push_back(llista_ordenada[i]);
+      freq.push_back(1);
+    } else {
+      freq[freq.size() - 1]++;
+    }
+  }
+
+  std::cout << "####### Taula de freqüències #######" << std::endl;
+  std::cout << "Valor\tFreq. Abs.\tFreq. Rel." << std::endl;
+  for (int i = 0; i < valors.size(); i++) {
+    std::cout << valors[i] << "\t" << freq[i] << "\t\t" << freq[i] / tamany << std::endl;
+  }
+}
+
+void mostrar_estadistics(
+  double mitjana, double moda, double desviacio_tipica, 
+  double maxim, double minim, double quartil_25, double quartil_75) {
+
+  std::cout << "####### Estadístics #######" << std::endl;
+  std::cout << "Mitjana: " << mitjana << std::endl;
+  std::cout << "Moda: " << moda << std::endl;
+  std::cout << "Desviació típica: " << desviacio_tipica << std::endl;
+  std::cout << "Màxim: " << maxim << std::endl;
+  std::cout << "Mínim: " << minim << std::endl;
+  std::cout << "Quartil 0.25: " << quartil_25 << std::endl;
+  std::cout << "Quartil 0.75: " << quartil_75 << std::endl;
+}
 
 
 int main() {
-  std::vector<double> lista;
+  std::vector<double> llista_dades;
   std::string input;
 
   while (true) {
-    std::cout << "Introduce un valor (Enter para finalizar): ";
+    std::cout << "Introdueix un número (Apreta 'Enter' per a finalizar): ";
     getline(std::cin, input);
 
     if (input.empty()) break;
@@ -38,20 +170,31 @@ int main() {
     // Si no s'introdueix un valor numèric, demanar de nou.
     try {
       double numero = std::stod(input);
-      lista.push_back(numero);
+      llista_dades.push_back(numero);
     } catch (std::invalid_argument&) {
       std::cout << "Valor invàlid, no s'ha guardat." << std::endl;
     }
   }
 
-  std::cout << "La lista es:\n[";
-  for (int i = 0; i < lista.size(); i++) {
-    std::cout << "\t" << lista[i] << "\t";
-    if (i < lista.size() - 1) {
-      std::cout << "|";
-    }
+  // Prevenir llista buida.
+  if (llista_dades.size() != 0) {
+    mostrar_llista(llista_dades);
+  } else {
+    std::cout << "No s'ha introduït cap valor." << std::endl;
+    return 0;
   }
-  std::cout << "]" << std::endl;
+
+  mostrar_taula(llista_dades);
+
+  double mitjana = calcular_mitjana(llista_dades);
+  double moda = calcular_moda(llista_dades);
+  double desviacio_tipica = calcular_desviacio_tipica(llista_dades, mitjana);
+  double maxim = calcular_maxim(llista_dades);
+  double minim = calcular_minim(llista_dades);
+  double quartil_25 = calcular_quartil(llista_dades, 0.25);
+  double quartil_75 = calcular_quartil(llista_dades, 0.75);
+
+  mostrar_estadistics(mitjana, moda, desviacio_tipica, maxim, minim, quartil_25, quartil_75);
 
   return 0;
 }
