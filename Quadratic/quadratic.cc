@@ -16,6 +16,9 @@ int main()
   if (discriminante < 0) {
     std::cout << "No hay soluciones reales" << std::endl;
     return 1;
+  } else if (discriminante == 0) {
+    std::cout << "Hay una única solución: " << -b/(2*a) << std::endl;
+    return 0;
   }
 
   double x1 = (-b + sqrt(discriminante))/(2*a);
