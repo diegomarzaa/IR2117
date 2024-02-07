@@ -19,11 +19,12 @@ int main()
   } else if (discriminante == 0) {
     std::cout << "Hay una única solución: " << -b/(2*a) << std::endl;
     return 0;
+  } else {
+    std::cout << "Hay dos soluciones reales" << std::endl;
+    double x1 = (-b + sqrt(discriminante))/(2*a);
+    double x2 = (-b - sqrt(discriminante))/(2*a);
+    std::cout << "Las soluciones son: " << x1 << " y " << x2 << std::endl;
   }
 
-  double x1 = (-b + sqrt(discriminante))/(2*a);
-  double x2 = (-b - sqrt(discriminante))/(2*a);
-
-  std::cout << "Las soluciones son: " << x1 << " y " << x2 << std::endl;
   return 0;
 }
