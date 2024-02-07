@@ -4,6 +4,7 @@
 #include <cmath>
 #include <algorithm>
 #include <map>
+#include <fstream>
 
 // CÀLCUL D'ESTADÍSTICS A PARTIR DE VALORS
 
@@ -166,6 +167,42 @@ void enter_per_a_continuar() {
   getline(std::cin, input);
 }
 
+bool guardar_dades(const std::vector<double>& llista_dades) {
+  std::string nom_fitxer;
+  std::cout << "Introdueix el nom del fitxer on guardar les dades: ";
+  getline(std::cin, nom_fitxer);
+  if (nom_fitxer.empty()) {
+    std::cout << "Nom de fitxer invàlid." << std::endl;
+    return false;
+  }
+  std::ofstream fitxer(nom_fitxer);
+  for (double num : llista_dades) {
+    fitxer << num << std::endl;
+  }
+  fitxer.close();
+  return true;
+}
+
+bool carregar_dades(std::vector<double>& llista_dades) {
+  std::string nom_fitxer;
+  std::cout << "Introdueix el nom del fitxer d'on carregar les dades: ";
+  getline(std::cin, nom_fitxer);
+  std::ifstream fitxer(nom_fitxer);
+
+  if (not fitxer.is_open()) {
+    return false;
+  }
+
+  std::string linia;
+  while (getline(fitxer, linia)) {
+    double num = std::stod(linia);
+    llista_dades.push_back(num);
+  }
+  fitxer.close();
+  return true;
+}
+
+
 int main() {
   std::vector<double> llista_dades;
   std::string input;
@@ -179,7 +216,9 @@ int main() {
     std::cout << "3. Mostrar llista de valors." << std::endl;
     std::cout << "4. Mostrar taula de freqüències." << std::endl;
     std::cout << "5. Mostrar estadístics." << std::endl;
-    std::cout << "6. Eixir." << std::endl;
+    std::cout << "6. Carregar dades de fitxer." << std::endl;
+    std::cout << "7. Guardar dades a fitxer." << std::endl;
+    std::cout << "8. Eixir." << std::endl;
     std::cout << "Introdueix una opció: ";
     getline(std::cin, input);
 
@@ -244,6 +283,20 @@ int main() {
       mostrar_estadistics(mitjana, moda, desviacio_tipica, maxim, minim, quartil_25, quartil_75);
 
     } else if (opcio == 6) {
+      if (carregar_dades(llista_dades)) {
+        std::cout << "Dades carregades correctament." << std::endl;
+      } else {
+        std::cout << "No s'ha pogut carregar el fitxer." << std::endl;
+      }
+
+    } else if (opcio == 7 and not llista_buida(llista_dades)) {
+      if (guardar_dades(llista_dades)) {
+        std::cout << "Dades guardades correctament." << std::endl;
+      } else {
+        std::cout << "No s'ha pogut guardar el fitxer." << std::endl;
+      }
+
+    } else if (opcio == 8) {
       break;
     
     } else {
