@@ -156,45 +156,101 @@ void mostrar_estadistics(
   std::cout << "Quartil 0.75: " << quartil_75 << std::endl;
 }
 
+bool llista_buida(const std::vector<double>& llista_dades) {
+  return llista_dades.size() == 0;
+}
+
+void enter_per_a_continuar() {
+  std::string input;
+  std::cout << "Apreta 'Enter' per a continuar" << std::endl;
+  getline(std::cin, input);
+}
 
 int main() {
   std::vector<double> llista_dades;
   std::string input;
+  int opcio;
 
   while (true) {
-    std::cout << "Introdueix un número (Apreta 'Enter' per a finalizar): ";
+
+    std::cout << "\n####### MENÚ #######" << std::endl;
+    std::cout << "1. Introduir valor a la llista." << std::endl;
+    std::cout << "2. Eliminar valor de la llista." << std::endl;
+    std::cout << "3. Mostrar llista de valors." << std::endl;
+    std::cout << "4. Mostrar taula de freqüències." << std::endl;
+    std::cout << "5. Mostrar estadístics." << std::endl;
+    std::cout << "6. Eixir." << std::endl;
+    std::cout << "Introdueix una opció: ";
     getline(std::cin, input);
 
-    if (input.empty()) break;
-
-    // Si no s'introdueix un valor numèric, demanar de nou.
-    try {
-      double numero = std::stod(input);
-      llista_dades.push_back(numero);
-    } catch (std::invalid_argument&) {
-      std::cout << "Valor invàlid, no s'ha guardat." << std::endl;
+    if (input.empty()) {
+      std::cout << "No s'ha introduït cap opció." << std::endl;
+      continue;
     }
+
+    try {
+      opcio = std::stoi(input);
+    } catch (std::invalid_argument&) {
+      std::cout << "Opció invàlida." << std::endl;
+    }
+
+    if (opcio == 1) {
+      bool introduint = true;
+      while (introduint) {
+        std::cout << "Introdueix un número a la llista (o apreta Enter per a acabar): ";
+        getline(std::cin, input);
+        if (input.empty()) {
+          introduint = false;
+        } else {
+          try {
+            double numero = std::stod(input);
+            llista_dades.push_back(numero);
+          } catch (std::invalid_argument&) {
+            std::cout << "Valor invàlid, no s'ha guardat." << std::endl;
+          }
+        }
+      }
+      continue;
+
+    } else if (opcio == 2 and not llista_buida(llista_dades)) {
+      std::cout << "Introdueix la posició del valor a eliminar: ";      
+      getline(std::cin, input);
+      try {
+        int posicio = std::stoi(input);
+        if (posicio < 0 or posicio >= llista_dades.size()) {
+          std::cout << "Posició invàlida." << std::endl;
+        } else {
+          llista_dades.erase(llista_dades.begin() + posicio);
+          std::cout << "Valor eliminat." << std::endl;
+        }
+      } catch (std::invalid_argument&) {
+        std::cout << "Posició invàlida." << std::endl;
+      }
+
+    } else if (opcio == 3 and not llista_buida(llista_dades)) {
+      mostrar_llista(llista_dades);
+
+    } else if (opcio == 4 and not llista_buida(llista_dades)) {
+      mostrar_taula(llista_dades);
+
+    } else if (opcio == 5 and not llista_buida(llista_dades)) {
+      double mitjana = calcular_mitjana(llista_dades);
+      double moda = calcular_moda(llista_dades);
+      double desviacio_tipica = calcular_desviacio_tipica(llista_dades, mitjana);
+      double maxim = calcular_maxim(llista_dades);
+      double minim = calcular_minim(llista_dades);
+      double quartil_25 = calcular_quartil(llista_dades, 0.25);
+      double quartil_75 = calcular_quartil(llista_dades, 0.75);
+      mostrar_estadistics(mitjana, moda, desviacio_tipica, maxim, minim, quartil_25, quartil_75);
+
+    } else if (opcio == 6) {
+      break;
+    
+    } else {
+      std::cout << "Opció invàlida. Comprova que la llista no està buida o que hages introduit una opció correcta" << std::endl;
+    }
+
+    enter_per_a_continuar();
   }
-
-  // Prevenir llista buida.
-  if (llista_dades.size() != 0) {
-    mostrar_llista(llista_dades);
-  } else {
-    std::cout << "No s'ha introduït cap valor." << std::endl;
-    return 0;
-  }
-
-  mostrar_taula(llista_dades);
-
-  double mitjana = calcular_mitjana(llista_dades);
-  double moda = calcular_moda(llista_dades);
-  double desviacio_tipica = calcular_desviacio_tipica(llista_dades, mitjana);
-  double maxim = calcular_maxim(llista_dades);
-  double minim = calcular_minim(llista_dades);
-  double quartil_25 = calcular_quartil(llista_dades, 0.25);
-  double quartil_75 = calcular_quartil(llista_dades, 0.75);
-
-  mostrar_estadistics(mitjana, moda, desviacio_tipica, maxim, minim, quartil_25, quartil_75);
-
   return 0;
 }
