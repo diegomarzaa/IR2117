@@ -19,11 +19,9 @@ int main()
     double parte_imaginaria = sqrt(-discriminante);
     std::cout << "Las soluciones complejas son: " << parte_real << " + " << parte_imaginaria << "i" 
               << " y " << parte_real << " - " << parte_imaginaria << "i" << std::endl;
-    return 0;
 
   } else if (discriminante == 0) {
     std::cout << "Hay una única solución: " << -b/(2*a) << std::endl;
-    return 0;
 
   } else {
     std::cout << "Hay dos soluciones reales" << std::endl;
