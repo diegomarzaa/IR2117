@@ -6,7 +6,7 @@ int sum;
 
 void topic_callback(const std_msgs::msg::Int32::SharedPtr msg) {
   sum += msg->data;
-  std::cout << sum << std::endl;
+  std::cout << sum << std::endl; 
 }
 
 int main(int argc, char * argv[])
