@@ -19,7 +19,21 @@ endif()
 find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
-# find_package(<dependency> REQUIRED)
+
+# ------------------------------------------------------------------------------
+
+find_package(rclcpp REQUIRED)      # rclcpp::rclcpp
+find_package(std_msgs REQUIRED)   # std_msgs::msg
+
+add_executable(sum src/sum.cpp)
+ament_target_dependencies(sum rclcpp std_msgs)
+
+install(TARGETS
+  sum
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# ------------------------------------------------------------------------------
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
