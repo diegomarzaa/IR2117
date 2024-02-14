@@ -8,6 +8,9 @@ std::vector<int> numbers;
 void topic_callback(const std_msgs::msg::Int32::SharedPtr msg){
 
   numbers.push_back(msg->data);
+
+  // Sort the numbers
+  std::sort(numbers.begin(), numbers.end());
   
   // Display the numbers in the vector
   std::string numbers_str = "";
