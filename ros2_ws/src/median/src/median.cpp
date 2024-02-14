@@ -5,6 +5,8 @@
 
 std::vector<int> numbers;
 
+std::shared_ptr<rclcpp::Publisher<std_msgs::msg::Float32>> publisher;   // Publisher to topic "/median"
+
 void topic_callback(const std_msgs::msg::Int32::SharedPtr msg){
 
   numbers.push_back(msg->data);
@@ -14,18 +16,25 @@ void topic_callback(const std_msgs::msg::Int32::SharedPtr msg){
 
   // Calculate the median
   int n = numbers.size();   // Number of elements in the vector
-  float median = 0;         // Value to return
+  float median_to_publish = 0;         // Value to return
 
   // Número par: Promedio de los dos números centrales
   if (n % 2 == 0){
-    median = (numbers[n/2 - 1] + numbers[n/2]) / 2;
-    std::cout << "Número par. " << "Promedio entre " << numbers[n/2 - 1] << " y " << numbers[n/2] << " da una mediana de: " << median << std::endl;
+    median_to_publish = (numbers[n/2 - 1] + numbers[n/2]) / 2;
+    std::cout << "Número par. " << "Promedio entre " << numbers[n/2 - 1] << " y " << numbers[n/2] << " da una mediana de: " << median_to_publish << std::endl;
 
   // Número impar: El número central
   } else {
-    median = numbers[n/2];
-    std::cout << "Número impar. " << "Mediana: " << median << std::endl;
+    median_to_publish = numbers[n/2];
+    std::cout << "Número impar. " << "Mediana: " << median_to_publish << std::endl;
   }
+
+  // Publish the median to the topic "/median"
+  std_msgs::msg::Float32 out_msg;
+  out_msg.data = median_to_publish;
+  publisher->publish(out_msg);
+
+  // ---------- //
   
   // Display the numbers in the vector
   std::string numbers_str = "";
@@ -46,6 +55,9 @@ int main(int argc, char * argv[])
 
   // SUSCRIPTOR AL TOPIC "/number"
   auto subscription = node->create_subscription<std_msgs::msg::Int32>("number", 10, topic_callback);
+
+  // PUBLICADOR AL TOPIC "/median"
+  publisher = node->create_publisher<std_msgs::msg::Float32>("median", 10);
   
   rclcpp::spin(node);
   rclcpp::shutdown();
