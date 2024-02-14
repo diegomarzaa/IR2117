@@ -37,3 +37,9 @@ Sum/sum_ab
 Quadratic/quadratic
 Proves/problem
 NewProblem/estadistics
+
+# ROS
+build/
+
+# Altres
+estadistics.md

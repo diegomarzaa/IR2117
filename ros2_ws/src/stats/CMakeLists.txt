@@ -20,11 +20,11 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)   # std_msgs::msg
 
-add_executable(stats src/mean.cpp)
+add_executable(mean src/mean.cpp)
 ament_target_dependencies(mean rclcpp std_msgs)
 
 install(TARGETS
-  stats
+mean
   DESTINATION lib/${PROJECT_NAME}
 )
 
