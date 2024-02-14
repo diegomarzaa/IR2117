@@ -16,36 +16,19 @@ void topic_callback(const std_msgs::msg::Int32::SharedPtr msg){
 
   // Calculate the median
   int n = numbers.size();   // Number of elements in the vector
-  float median_to_publish = 0;         // Value to return
+  std_msgs::msg::Float32 median_to_publish;
 
   // Número par: Promedio de los dos números centrales
   if (n % 2 == 0){
-    median_to_publish = (numbers[n/2 - 1] + numbers[n/2]) / 2;
-    std::cout << "Número par. " << "Promedio entre " << numbers[n/2 - 1] << " y " << numbers[n/2] << " da una mediana de: " << median_to_publish << std::endl;
+    median_to_publish.data = (numbers[n/2 - 1] + numbers[n/2]) / 2;
 
   // Número impar: El número central
   } else {
-    median_to_publish = numbers[n/2];
-    std::cout << "Número impar. " << "Mediana: " << median_to_publish << std::endl;
+    median_to_publish.data = numbers[n/2];
   }
 
   // Publish the median to the topic "/median"
-  std_msgs::msg::Float32 out_msg;
-  out_msg.data = median_to_publish;
-  publisher->publish(out_msg);
-
-  // ---------- //
-  
-  // Display the numbers in the vector
-  std::string numbers_str = "";
-  for (int i = 0; i < n; i++){
-    numbers_str += std::to_string(numbers[i]);
-    if (i < n-1){
-      numbers_str += ", ";
-    }
-  }
-
-  std::cout << "List of numbers: " << numbers_str << std::endl << std::endl;
+  publisher->publish(median_to_publish);
 }
 
 int main(int argc, char * argv[])
