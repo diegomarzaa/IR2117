@@ -22,6 +22,7 @@ find_package(std_msgs REQUIRED)   # std_msgs::msg
 
 add_executable(mean src/mean.cpp)
 add_executable(median src/median.cpp)
+add_executable(mode src/mode.cpp)
 ament_target_dependencies(mean rclcpp std_msgs)
 ament_target_dependencies(median rclcpp std_msgs)
 ament_target_dependencies(mode rclcpp std_msgs)
