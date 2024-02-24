@@ -5,6 +5,7 @@
 #include <iostream>
 
 std::shared_ptr<rclcpp::Publisher<std_msgs::msg::Int32MultiArray>> publisher;   // Publisher to topic "/median"
+
 std::map<int, int> numbers_counter;   // (número: ocurrencias)
 int moda_actual = 0;      // Número máximo de ocurrencias para algun numero
 auto modas = std_msgs::msg::Int32MultiArray();    // Array con las modas que se publicará

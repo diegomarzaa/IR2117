@@ -13,7 +13,8 @@ int main(int argc, char * argv[])
   auto node = rclcpp::Node::make_shared("subscriber");
   auto subscription = 
     node->create_subscription<std_msgs::msg::String>("topic", 10, topic_callback);
-  rclcpp::spin(node);
+  rclcpp::spin(node);   // Es queda esperant en esta linea fins que es rep un missatge
+                        // Es una estructura sense bucle
   rclcpp::shutdown();
   return 0;
 }

@@ -1,6 +1,6 @@
-#include "rclcpp/rclcpp.hpp"
+#include "rclcpp/rclcpp.hpp"          // Main ROS2
 #include "std_msgs/msg/int32.hpp"
-#include "std_msgs/msg/float32.hpp"   // Import this.
+#include "std_msgs/msg/float32.hpp"   // Import this, those are the messages that will be published (or subscribed to)
 #include <iostream>
 
 // RUNNING THE NODE
@@ -12,23 +12,23 @@ double sum = 0;
 int message_count = 0;
 double mean_to_publish = 0;
 
-std::shared_ptr<rclcpp::Publisher<std_msgs::msg::Float32>> publisher;
+std::shared_ptr<rclcpp::Publisher<std_msgs::msg::Float32>> publisher;   // Shared pointer that can be used across diferent parts of the program
 
 void topic_callback(const std_msgs::msg::Int32::SharedPtr msg) {
-
-  // Recibimos un entero a través del topic "/number"
   // Agregamos el nuevo valor al total, aumentamos la cantidad de mensajes, y hacemos la media
-  // Luego publicamos el valor de la media al topic "/mean"
+  // Luego publicamos el valor a nuestro publisher
 
+  std::cout << "Número recibido: " << msg->data << std::endl;
+
+  // Actualizar media con el nuevo mensaje
   sum += msg->data;
   message_count++;
   mean_to_publish = sum / message_count;
 
+  // Publicar media
   std_msgs::msg::Float32 out_msg;
   out_msg.data = mean_to_publish;
   publisher->publish(out_msg);
-
-  std::cout << "Número recibido: " << msg->data << std::endl;
 }
 
 int main(int argc, char * argv[])
