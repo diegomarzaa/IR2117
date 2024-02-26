@@ -22,12 +22,14 @@ find_package(std_msgs REQUIRED)
 
 add_executable(min src/min.cpp)
 add_executable(max src/max.cpp)
+add_executable(minmax src/minmax.cpp)
 
 ament_target_dependencies(min rclcpp std_msgs)
 ament_target_dependencies(max rclcpp std_msgs)
+ament_target_dependencies(minmax rclcpp std_msgs)
 
 install(TARGETS
-min max
+min max minmax
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
