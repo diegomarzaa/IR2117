@@ -1,6 +1,7 @@
 #include <chrono>     // Treballar en constants temporals (forma part de C++. no ros), no entra examen pero pot ser interessant
 #include "rclcpp/rclcpp.hpp"
-#include "geometry_msgs/msg/Twist" // Canviem el tipus de fitxer al de moure motors
+#include "geometry_msgs/msg/twist.hpp" // Canviem el tipus de fitxer al de moure motors
+#include <iostream>
 
 using namespace std::chrono_literals;   // Si no es posa aquesta linia, hauriem de posar std::chrono::milliseconds(500) en lloc de 500ms
 
@@ -10,16 +11,25 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   auto node = rclcpp::Node::make_shared("publisher");     // Crear un punter compartit
   auto publisher = node->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);     // El 10 es el tamany de la cua, se descartaran els primers missatges si la cua esta plena
   geometry_msgs::msg::Twist message;    // Missatge per a moure el robot
-  rclcpp::WallRate loop_rate(500ms);    // Frecuencia per a que el bucle es repetisca (usa chrono)
+  
+  // Dades
+  double distance = 1.0;
+  double speed = 0.1;
+  rclcpp::WallRate loop_rate(10ms);
+  double total_time = distance / speed;
+  int i=0;
+  int n = total_time / 0.01;    // iteracions
 
-
-  while (rclcpp::ok()) {    // Bucle principal del programa
-    message.linear.x = 1.0;
-    message.angular.z = 1.0;
+  while (rclcpp::ok() && i<n) {
+    i++;
+    message.linear.x = speed;
     publisher->publish(message);
     rclcpp::spin_some(node);
     loop_rate.sleep();
   }
+
+  message.linear.x = 0.0;
+  publisher->publish(message);
 
   rclcpp::shutdown();   // Finalitzar el ROS
   return 0;
