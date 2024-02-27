@@ -2,6 +2,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/twist.hpp" // Canviem el tipus de fitxer al de moure motors
 #include <iostream>
+#include <math.h>
+
 
 using namespace std::chrono_literals;   // Si no es posa aquesta linia, hauriem de posar std::chrono::milliseconds(500) en lloc de 500ms
 
@@ -29,6 +31,23 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   }
 
   message.linear.x = 0.0;
+  publisher->publish(message);
+
+  double angle = 90 * M_PI / 180;           // 90 graus a radians
+  double angular_speed = 9 * M_PI / 180;    // 9 graus a radians per segon
+  total_time = angle / angular_speed;
+  i=0;
+  n = total_time / 0.01;    // iteracions
+
+  while (rclcpp::ok() && i<n) {
+    i++;
+    message.angular.z = angular_speed;
+    publisher->publish(message);
+    rclcpp::spin_some(node);
+    loop_rate.sleep();
+  }
+
+  message.angular.z = 0.0;
   publisher->publish(message);
 
   rclcpp::shutdown();   // Finalitzar el ROS
