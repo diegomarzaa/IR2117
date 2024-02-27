@@ -14,41 +14,50 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   auto publisher = node->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);     // El 10 es el tamany de la cua, se descartaran els primers missatges si la cua esta plena
   geometry_msgs::msg::Twist message;    // Missatge per a moure el robot
   
-  // Dades
-  double distance = 1.0;
-  double speed = 0.1;
+  // Dades moviment
   rclcpp::WallRate loop_rate(10ms);
-  double total_time = distance / speed;
   int i=0;
-  int n = total_time / 0.01;    // iteracions
+  
+  // Dades avant
+  double distance = 1.0;
+  double forward_speed = 0.1;
+  double total_time_forward = distance / forward_speed;
+  int n_avant = total_time_forward / 0.01;    // iteracions
 
-  while (rclcpp::ok() && i<n) {
-    i++;
-    message.linear.x = speed;
-    publisher->publish(message);
-    rclcpp::spin_some(node);
-    loop_rate.sleep();
-  }
-
-  message.linear.x = 0.0;
-  publisher->publish(message);
-
+  // Dades gir
   double angle = 90 * M_PI / 180;           // 90 graus a radians
   double angular_speed = 9 * M_PI / 180;    // 9 graus a radians per segon
-  total_time = angle / angular_speed;
-  i=0;
-  n = total_time / 0.01;    // iteracions
+  double total_time_rotation = angle / angular_speed;
+  int n_gir = total_time_rotation / 0.01;    // iteracions
 
-  while (rclcpp::ok() && i<n) {
-    i++;
-    message.angular.z = angular_speed;
+  // Moviment quadrat
+  for(int j=0; j<4; j++)
+  {
+    i=0;
+    
+    while (rclcpp::ok() && i<n_avant) {
+      i++;
+      message.linear.x = forward_speed;
+      publisher->publish(message);
+      rclcpp::spin_some(node);
+      loop_rate.sleep();
+    }
+    message.linear.x = 0.0;
     publisher->publish(message);
-    rclcpp::spin_some(node);
-    loop_rate.sleep();
-  }
+    
+    i=0;
 
-  message.angular.z = 0.0;
-  publisher->publish(message);
+    while (rclcpp::ok() && i<n_gir) {
+      i++;
+      message.angular.z = angular_speed;
+      publisher->publish(message);
+      rclcpp::spin_some(node);
+      loop_rate.sleep();
+    }
+
+    message.angular.z = 0.0;
+    publisher->publish(message);
+  }
 
   rclcpp::shutdown();   // Finalitzar el ROS
   return 0;
