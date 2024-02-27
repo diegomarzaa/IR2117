@@ -8,14 +8,14 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
 {
   rclcpp::init(argc, argv);   // Inicialitzar el ROS
   auto node = rclcpp::Node::make_shared("publisher");     // Crear un punter compartit
-  auto publisher = node->create_publisher<std_msgs::msg::String>("cmd_vel", 10);     // El 10 es el tamany de la cua, se descartaran els primers missatges si la cua esta plena
-  std_msgs::msg::String message;
-  auto publish_count = 0;
+  auto publisher = node->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);     // El 10 es el tamany de la cua, se descartaran els primers missatges si la cua esta plena
+  geometry_msgs::msg::Twist message;    // Missatge per a moure el robot
   rclcpp::WallRate loop_rate(500ms);    // Frecuencia per a que el bucle es repetisca (usa chrono)
 
 
   while (rclcpp::ok()) {    // Bucle principal del programa
-    message.data = "Hello, world! " + std::to_string(publish_count++);
+    message.linear.x = 1.0;
+    message.angular.z = 1.0;
     publisher->publish(message);
     rclcpp::spin_some(node);
     loop_rate.sleep();
