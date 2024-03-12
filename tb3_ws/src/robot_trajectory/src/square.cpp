@@ -11,7 +11,8 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   rclcpp::init(argc, argv);   // Inicialitzar el ROS
   auto node = rclcpp::Node::make_shared("publisher");     // Crear un punter compartit
   auto publisher = node->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);     // El 10 es el tamany de la cua, se descartaran els primers missatges si la cua esta plena
-  node->declare_parameter("speed", 0.1);    // Declarar un paràmetre amb el valor per defecte 0.1
+  node->declare_parameter("linear_speed", 0.1);    // Declarar un paràmetre amb el valor per defecte 0.1
+  node->declare_parameter("angular_speed", M_PI / 20);
   geometry_msgs::msg::Twist message;    // Missatge per a moure el robot
   
   // Dades moviment
@@ -20,24 +21,27 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   
   // Dades avant
   double distance = 1.0;
-  double speed = node->get_parameter("speed").get_parameter_value().get<double>();    // Obtenir el valor del paràmetre
-  double total_time_forward = distance / speed;
+  double linear_speed = node->get_parameter("linear_speed").get_parameter_value().get<double>();    // Obtenir el valor del paràmetre
+  std::cout << "linear_speed: " << linear_speed << std::endl;
+  double total_time_forward = distance / linear_speed;
   int n_avant = total_time_forward / 0.01;    // iteracions
 
   // Dades gir
   double angle = 90 * M_PI / 180;           // 90 graus a radians
-  double angular_speed = 9 * M_PI / 180;    // 9 graus a radians per segon
+  double angular_speed = node->get_parameter("angular_speed").get_parameter_value().get<double>();
+  std::cout << "angular_speed: " << angular_speed << std::endl;
   double total_time_rotation = angle / angular_speed;
-  int n_gir = total_time_rotation / 0.01;    // iteracions
+  int n_gir = total_time_rotation / 0.01;
 
   // Moviment quadrat
   for(int j=0; j<4; j++)
   {
     i=0;
     
+    std::cout << "Avant" << std::endl;
     while (rclcpp::ok() && i<n_avant) {
       i++;
-      message.linear.x = speed;
+      message.linear.x = linear_speed;
       publisher->publish(message);
       rclcpp::spin_some(node);
       loop_rate.sleep();
@@ -47,6 +51,7 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
     
     i=0;
 
+    std::cout << "Gir" << std::endl;
     while (rclcpp::ok() && i<n_gir) {
       i++;
       message.angular.z = angular_speed;
@@ -58,6 +63,13 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
     message.angular.z = 0.0;
     publisher->publish(message);
   }
+
+  message.linear.x = 0.0;
+  message.angular.z = 0.0;
+  publisher->publish(message);
+  std::cout << "Final del programa" << std::endl;
+
+
 
   rclcpp::shutdown();   // Finalitzar el ROS
   return 0;
