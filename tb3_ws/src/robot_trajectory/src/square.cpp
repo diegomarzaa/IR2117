@@ -4,7 +4,6 @@
 #include <iostream>
 #include <math.h>
 
-
 using namespace std::chrono_literals;   // Si no es posa aquesta linia, hauriem de posar std::chrono::milliseconds(500) en lloc de 500ms
 
 int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter a un array de punter a caràcters
@@ -12,6 +11,7 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   rclcpp::init(argc, argv);   // Inicialitzar el ROS
   auto node = rclcpp::Node::make_shared("publisher");     // Crear un punter compartit
   auto publisher = node->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);     // El 10 es el tamany de la cua, se descartaran els primers missatges si la cua esta plena
+  node->declare_parameter("speed", 0.1);    // Declarar un paràmetre amb el valor per defecte 0.1
   geometry_msgs::msg::Twist message;    // Missatge per a moure el robot
   
   // Dades moviment
@@ -20,8 +20,8 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   
   // Dades avant
   double distance = 1.0;
-  double forward_speed = 0.1;
-  double total_time_forward = distance / forward_speed;
+  double speed = node->get_parameter("speed").get_parameter_value().get<double>();    // Obtenir el valor del paràmetre
+  double total_time_forward = distance / speed;
   int n_avant = total_time_forward / 0.01;    // iteracions
 
   // Dades gir
@@ -37,7 +37,7 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
     
     while (rclcpp::ok() && i<n_avant) {
       i++;
-      message.linear.x = forward_speed;
+      message.linear.x = speed;
       publisher->publish(message);
       rclcpp::spin_some(node);
       loop_rate.sleep();
