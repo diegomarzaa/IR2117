@@ -20,12 +20,17 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-add_executable(publisher src/square.cpp)
-ament_target_dependencies(publisher rclcpp geometry_msgs)
+add_executable(square src/square.cpp)
+ament_target_dependencies(square rclcpp geometry_msgs)
 
 install(TARGETS
-  publisher
+  square
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
