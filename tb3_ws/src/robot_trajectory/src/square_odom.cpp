@@ -1,16 +1,22 @@
 #include <chrono>     // Treballar en constants temporals (forma part de C++. no ros), no entra examen pero pot ser interessant
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/twist.hpp" // Canviem el tipus de fitxer al de moure motors
+#include "nav_msgs/msg/odometry.hpp"
 #include <iostream>
 #include <cmath>
 
 using namespace std::chrono_literals;   // Si no es posa aquesta linia, hauriem de posar std::chrono::milliseconds(500) en lloc de 500ms
+
+void callback_odom(const nav_msgs::msg::Odometry::SharedPtr msg) {
+  std::cout << "Position: (" << msg->pose.pose.position.x << ", " << msg->pose.pose.position.y << ")" << std::endl;
+}
 
 int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter a un array de punter a caràcters
 {
   rclcpp::init(argc, argv);   // Inicialitzar el ROS
   auto node = rclcpp::Node::make_shared("square_odom");     // Crear un punter compartit
   auto publisher = node->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10);     // El 10 es el tamany de la cua, se descartaran els primers missatges si la cua esta plena
+  auto subscriber_odom = node->create_subscription<nav_msgs::msg::Odometry>("odom", 10, callback_odom);     // Crear un subscriptor
   node->declare_parameter("linear_speed", 0.1);    // Declarar un paràmetre amb el valor per defecte 0.1
   node->declare_parameter("angular_speed", M_PI / 20);
   node->declare_parameter("square_length", 1.0);
