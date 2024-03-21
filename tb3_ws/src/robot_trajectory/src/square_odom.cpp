@@ -7,7 +7,12 @@
 
 using namespace std::chrono_literals;   // Si no es posa aquesta linia, hauriem de posar std::chrono::milliseconds(500) en lloc de 500ms
 
+double x = 0.0;
+double y = 0.0;
+
 void callback_odom(const nav_msgs::msg::Odometry::SharedPtr msg) {
+  x = msg->pose.pose.position.x;
+  y = msg->pose.pose.position.y;
   std::cout << "Position: (" << msg->pose.pose.position.x << ", " << msg->pose.pose.position.y << ")" << std::endl;
 }
 
