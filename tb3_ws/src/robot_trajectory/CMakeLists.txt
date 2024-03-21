@@ -21,10 +21,13 @@ find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 add_executable(square src/square.cpp)
+add_executable(square_odom src/square_odom.cpp)
 ament_target_dependencies(square rclcpp geometry_msgs)
+ament_target_dependencies(square_odom rclcpp geometry_msgs)
 
 install(TARGETS
   square
+  square_odom
   DESTINATION lib/${PROJECT_NAME}
 )
 
