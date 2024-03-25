@@ -15,6 +15,7 @@ double x_init = 0.0;
 double y_init = 0.0;
 double theta_init = 0.0;
 
+
 double eulerFromQuaternion(const geometry_msgs::msg::Quaternion& quat) {
   double x = quat.x;
   double y = quat.y;
@@ -43,6 +44,10 @@ void callback_odom(const nav_msgs::msg::Odometry::SharedPtr msg) {
     y_init = msg->pose.pose.position.y;
     theta_init = eulerFromQuaternion(msg->pose.pose.orientation);
   }
+
+  double x_distance = msg->pose.pose.position.x - x_init;
+  double y_distance = msg->pose.pose.position.y - y_init;
+  std::cout << "Distance: (" << x_distance << ", " << y_distance << ")" << std::endl;
 
   x = msg->pose.pose.position.x;
   y = msg->pose.pose.position.y;
