@@ -21,18 +21,17 @@ double eulerFromQuaternion(const geometry_msgs::msg::Quaternion& quat) {
   double y = quat.y;
   double z = quat.z;
   double w = quat.w;
-  double roll, pitch, yaw;
 
   double sinr_cosp = 2.0 * (w * x + y * z);
   double cosr_cosp = 1.0 - 2.0 * (x * x + y * y);
-  roll = std::atan2(sinr_cosp, cosr_cosp);
+  double roll = std::atan2(sinr_cosp, cosr_cosp);
 
   double sinp = 2.0 * (w * y - z * x);
-  pitch = std::asin(sinp);
+  double pitch = std::asin(sinp);
 
   double siny_cosp = 2.0 * (w * z + x * y);
   double cosy_cosp = 1.0 - 2.0 * (y * y + z * z);
-  yaw = std::atan2(siny_cosp, cosy_cosp);
+  double yaw = std::atan2(siny_cosp, cosy_cosp);
 
   return yaw;   // El que ens interessa (angle vist desde dalt, el z)
 }
@@ -45,15 +44,17 @@ void callback_odom(const nav_msgs::msg::Odometry::SharedPtr msg) {
     theta_init = eulerFromQuaternion(msg->pose.pose.orientation);
   }
 
-  double x_distance = msg->pose.pose.position.x - x_init;
-  double y_distance = msg->pose.pose.position.y - y_init;
-  std::cout << "Distance: (" << x_distance << ", " << y_distance << ")" << std::endl;
-
   x = msg->pose.pose.position.x;
   y = msg->pose.pose.position.y;
   theta = eulerFromQuaternion(msg->pose.pose.orientation);    // En radians
   std::cout << "Position: (" << x << ", " << y << ")" << std::endl;
   std::cout << "Orientation (radians): " << theta << std::endl;
+
+  double x_distance = x - x_init;
+  double y_distance = y - y_init;
+  double theta_distance = theta - theta_init;
+  std::cout << "Distance: (" << x_distance << ", " << y_distance << ")" << std::endl;
+  std::cout << "Orientation distance (radians): " << theta_distance << std::endl;
 }
 
 int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter a un array de punter a caràcters
