@@ -11,6 +11,10 @@ double x = 0.0;
 double y = 0.0;
 double theta = 0.0;  // En radians
 
+double x_init = 0.0;
+double y_init = 0.0;
+double theta_init = 0.0;
+
 double eulerFromQuaternion(const geometry_msgs::msg::Quaternion& quat) {
   double x = quat.x;
   double y = quat.y;
@@ -33,6 +37,13 @@ double eulerFromQuaternion(const geometry_msgs::msg::Quaternion& quat) {
 }
 
 void callback_odom(const nav_msgs::msg::Odometry::SharedPtr msg) {
+  if (x_init == 0.0 && y_init == 0.0 && theta_init == 0.0) {
+    std::cout << "Initial position: (" << msg->pose.pose.position.x << ", " << msg->pose.pose.position.y << ")" << std::endl;
+    x_init = msg->pose.pose.position.x;
+    y_init = msg->pose.pose.position.y;
+    theta_init = eulerFromQuaternion(msg->pose.pose.orientation);
+  }
+
   x = msg->pose.pose.position.x;
   y = msg->pose.pose.position.y;
   theta = eulerFromQuaternion(msg->pose.pose.orientation);    // En radians
@@ -100,6 +111,7 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
     publisher->publish(message);
   }
 
+  // Parar robot
   message.linear.x = 0.0;
   message.angular.z = 0.0;
   publisher->publish(message);
