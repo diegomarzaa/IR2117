@@ -7,13 +7,17 @@
 
 using namespace std::chrono_literals;   // Si no es posa aquesta linia, hauriem de posar std::chrono::milliseconds(500) en lloc de 500ms
 
+double x_init = 0.0;
+double y_init = 0.0;
+double theta_init = 0.0;
+bool actualizar_init = true;
+
 double x = 0.0;
 double y = 0.0;
 double theta = 0.0;  // En radians
 
-double x_init = 0.0;
-double y_init = 0.0;
-double theta_init = 0.0;
+double distance = 0.0;
+double theta_distance = 0.0;
 
 
 double eulerFromQuaternion(const geometry_msgs::msg::Quaternion& quat) {
@@ -37,24 +41,27 @@ double eulerFromQuaternion(const geometry_msgs::msg::Quaternion& quat) {
 }
 
 void callback_odom(const nav_msgs::msg::Odometry::SharedPtr msg) {
-  if (x_init == 0.0 && y_init == 0.0 && theta_init == 0.0) {
-    std::cout << "Initial position: (" << msg->pose.pose.position.x << ", " << msg->pose.pose.position.y << ")" << std::endl;
-    x_init = msg->pose.pose.position.x;
-    y_init = msg->pose.pose.position.y;
-    theta_init = eulerFromQuaternion(msg->pose.pose.orientation);
-  }
-
+  std::cout << "\nOdometry message received" << std::endl;
+  
   x = msg->pose.pose.position.x;
   y = msg->pose.pose.position.y;
   theta = eulerFromQuaternion(msg->pose.pose.orientation);    // En radians
-  std::cout << "Position: (" << x << ", " << y << ")" << std::endl;
-  std::cout << "Orientation (radians): " << theta << std::endl;
+  std::cout << "Position:\t\t (X: " << x << ",\tY: " << y << ",\tTheta: " << theta << ")" << std::endl;
 
+  if (actualizar_init) {
+    actualizar_init = false;
+    x_init = x;
+    y_init = y;
+    theta_init = theta;
+    std::cout << "Initial position: (X: " << x_init << ",\tY: " << y_init << ",\tTheta: " << theta_init << ")" << std::endl;
+  }
+  
   double x_distance = x - x_init;
   double y_distance = y - y_init;
-  double theta_distance = theta - theta_init;
-  std::cout << "Distance: (" << x_distance << ", " << y_distance << ")" << std::endl;
-  std::cout << "Orientation distance (radians): " << theta_distance << std::endl;
+  distance = sqrt(pow(x_distance, 2) + pow(y_distance, 2));
+  theta_distance = theta - theta_init;
+
+  std::cout << "Distance:\t\t (X: " << x_distance << ", Y: " << y_distance << ", \tTheta: " << theta_distance << ")" << std::endl;
 }
 
 int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter a un array de punter a caràcters
@@ -69,31 +76,27 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   geometry_msgs::msg::Twist message;    // Missatge per a moure el robot
   
   // Dades moviment
-  rclcpp::WallRate loop_rate(10ms);
-  int i=0;
+  rclcpp::WallRate loop_rate(50ms);
   double square_length = node->get_parameter("square_length").get_parameter_value().get<double>();
   double loop_wait = 0.01;
   
   // Dades avant
-  double distance = square_length;
+  // double distance = square_length;
   double linear_speed = node->get_parameter("linear_speed").get_parameter_value().get<double>();    // Obtenir el valor del paràmetre
   std::cout << "linear_speed: " << linear_speed << std::endl;
-  double linear_iterations = distance / (loop_wait * linear_speed);
 
   // Dades gir
-  double angle = 90 * M_PI / 180;           // 90 graus a radians
+  double angle_a_fer = 90 * M_PI / 180;           // 90 graus a radians
   double angular_speed = node->get_parameter("angular_speed").get_parameter_value().get<double>();
   std::cout << "angular_speed: " << angular_speed << std::endl;
-  double angular_iterations = angle / (loop_wait * angular_speed);
 
   // Moviment quadrat
   for(int j=0; j<4; j++)
   {
-    i=0;
-    
     std::cout << "Avant" << std::endl;
-    while (rclcpp::ok() && i<linear_iterations) {
-      i++;
+    actualizar_init = true;
+
+    while (rclcpp::ok() && distance < square_length) {
       message.linear.x = linear_speed;
       publisher->publish(message);
       rclcpp::spin_some(node);
@@ -101,12 +104,10 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
     }
     message.linear.x = 0.0;
     publisher->publish(message);
-    
-    i=0;
 
+    actualizar_init = true;
     std::cout << "Gir" << std::endl;
-    while (rclcpp::ok() && i<angular_iterations) {
-      i++;
+    while (rclcpp::ok() && abs(theta_distance) < angle_a_fer) { 
       message.angular.z = angular_speed;
       publisher->publish(message);
       rclcpp::spin_some(node);
@@ -116,7 +117,6 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
     message.angular.z = 0.0;
     publisher->publish(message);
   }
-
   // Parar robot
   message.linear.x = 0.0;
   message.angular.z = 0.0;
