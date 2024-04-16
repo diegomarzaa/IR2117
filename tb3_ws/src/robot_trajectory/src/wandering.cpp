@@ -9,6 +9,9 @@ rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher;
 float min_esquerra;
 float min_dreta;
 
+bool turn_left = false;
+bool turn_right = false;
+
 void scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
 
   auto moviment = geometry_msgs::msg::Twist();
@@ -42,27 +45,36 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   while (rclcpp::ok()) {    // Bucle principal del programa
     auto moviment = geometry_msgs::msg::Twist();
     
-    if (min_esquerra < 0.5 or min_dreta < 0.5) {
-      std::cout << "Hi ha un obstacle a menys de 0.5m." << std::endl;
-      if (min_esquerra > min_dreta) {
-        std::cout << "Girant a la esquerra" << std::endl;
-        moviment.linear.x = 0.0;
-        moviment.angular.z = -0.5;
-      } else {
-        std::cout << "Girant a la dreta" << std::endl;
-        moviment.linear.x = 0.0;
-        moviment.angular.z = 0.5;
-      }
-    } else {
-      std::cout << "No hi ha cap obstacle a menys de 0.5m." << std::endl;
-      moviment.linear.x = 0.5;
+    if (turn_left == false and turn_right == false) {
+      moviment.linear.x = 0.5;    // Avançar
       moviment.angular.z = 0.0;
+
+      if (min_esquerra < 0.5 or min_dreta < 0.5) {    // Si hi ha un obstacle a menys de 0.5m
+        if (min_esquerra > min_dreta) {
+          turn_left = true;
+        } else {
+          turn_right = true;
+        }
+      }
+
+    } else if (turn_left == true) {
+      moviment.linear.x = 0.0;
+      moviment.angular.z = -0.5;    // Girar a l'esquerra
+      if (min_esquerra > 0.5 and min_dreta > 0.5) {
+        turn_left = false;
+      }
+
+    } else if (turn_right == true) {
+      moviment.linear.x = 0.0;
+      moviment.angular.z = 0.5;   // Girar a la dreta
+      if (min_esquerra > 0.5 and min_dreta > 0.5) {
+        turn_right = false;
+      }
     }
-    
+
     publisher->publish(moviment);
     rclcpp::spin_some(node);
     loop_rate.sleep();
-
   }
 
   rclcpp::shutdown();   // Finalitzar el ROS
