@@ -7,16 +7,22 @@
 using namespace std::chrono_literals;   // Si no es posa aquesta linia, hauriem de posar std::chrono::milliseconds(500) en lloc de 500ms
 
 void scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
-  std::cout << "\nMostrant en pantalla els valors del vector ranges: " << std::endl;
-  // 0 a 9
+  // std::cout << "\nMostrant en pantalla els valors del vector ranges: " << std::endl;
+  float min = msg->ranges[0];
   for (int i = 0; i <= 9; ++i) {
-    std::cout << "El valor de l'angle " << i << " graus és " << msg->ranges[i] << std::endl;
+    // std::cout << "El valor de l'angle " << i << " graus és " << msg->ranges[i] << std::endl;
+    if (msg->ranges[i] < min) {
+      min = msg->ranges[i];
+    }
+  }
+  for (int i = 350; i <= 359; ++i) {
+    // std::cout << "El valor de l'angle " << i << " graus és " << msg->ranges[i] << std::endl;
+    if (msg->ranges[i] < min) {
+      min = msg->ranges[i];
+    }
   }
 
-  // 350 a 359
-  for (int i = 350; i <= 359; ++i) {
-    std::cout << "El valor de l'angle " << i << " graus és " << msg->ranges[i] << std::endl;
-  }
+  std::cout << "El valor mínim és: " << min << std::endl;
 }
 
 int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter a un array de punter a caràcters
