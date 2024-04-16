@@ -8,7 +8,13 @@ using namespace std::chrono_literals;   // Si no es posa aquesta linia, hauriem 
 
 void scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
   std::cout << "\nMostrant en pantalla els valors del vector ranges: " << std::endl;
-  for (int i : {0, 90, 180, 270}) {
+  // 0 a 9
+  for (int i = 0; i <= 9; ++i) {
+    std::cout << "El valor de l'angle " << i << " graus és " << msg->ranges[i] << std::endl;
+  }
+
+  // 350 a 359
+  for (int i = 350; i <= 359; ++i) {
     std::cout << "El valor de l'angle " << i << " graus és " << msg->ranges[i] << std::endl;
   }
 }
