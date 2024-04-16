@@ -26,11 +26,13 @@ void scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
   if (min > 0.5) {
     std::cout << "No hi ha cap obstacle a menys de 0.5m" << std::endl;
     moviment.linear.x = 0.5;
+    moviment.angular.z = 0.0;
     publisher->publish(moviment);
 
   } else {
-    std::cout << "Hi ha un obstacle a menys de 0.5m" << std::endl;
+    std::cout << "Hi ha un obstacle a menys de 0.5m, girant a la esquerra" << std::endl;
     moviment.linear.x = 0.0;
+    moviment.angular.z = 0.5;
     publisher->publish(moviment);
   }
 
