@@ -25,14 +25,18 @@ find_package(sensor_msgs REQUIRED)
 add_executable(square src/square.cpp)
 add_executable(square_odom src/square_odom.cpp)
 add_executable(wandering src/wandering.cpp)
+add_executable(polygon src/polygon.cpp)
+
 ament_target_dependencies(square rclcpp geometry_msgs)
 ament_target_dependencies(square_odom rclcpp geometry_msgs nav_msgs)
 ament_target_dependencies(wandering rclcpp geometry_msgs nav_msgs sensor_msgs)
+ament_target_dependencies(polygon rclcpp geometry_msgs)
 
 install(TARGETS
   square
   square_odom
   wandering
+  polygon
   DESTINATION lib/${PROJECT_NAME}
 )
 
