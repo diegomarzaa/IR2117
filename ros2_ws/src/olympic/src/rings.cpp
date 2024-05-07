@@ -17,7 +17,37 @@ int main(int argc, char **argv)
   rclcpp::WallRate loop_rate(500ms);
 
   // REQUEST
-  auto request_setpen = std::make_shared<turtlesim::srv::SetPen::Request>();  
+  auto request_setpen = std::make_shared<turtlesim::srv::SetPen::Request>();
+
+  // BLUE
+  request->r = 0;
+  request->g = 0;
+  request->b = 255;
+  
+  // BLACK
+  // request->r = 0;
+  // request->g = 0;
+  // request->b = 0;
+
+  // RED
+  // request->r = 255;
+  // request->g = 0;
+  // request->b = 0;
+
+  // YELLOW
+  // request_setpen->r = 255;
+  // request_setpen->g = 255;
+  // request_setpen->b = 0;
+
+  // GREEN
+  // request_setpen->r = 0;
+  // request_setpen->g = 255;
+  // request_setpen->b = 0;
+
+  // GENERAL PEN
+  request_setpen->width = 2;
+  request_setpen->off = false;
+  
 
   // REQUEST CLIENT
   auto client = node->create_client<turtlesim::srv::SetPen>("turtle1/set_pen");
