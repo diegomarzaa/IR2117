@@ -1,6 +1,7 @@
 #include <chrono>
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include "turtlesim/srv/set_pen.hpp"
 
 using namespace std::chrono_literals;
 
@@ -14,6 +15,34 @@ int main(int argc, char **argv)
   geometry_msgs::msg::Twist message;
   auto publish_count = 0;
   rclcpp::WallRate loop_rate(500ms);
+
+  // REQUEST
+  auto request_setpen = std::make_shared<turtlesim::srv::SetPen::Request>();  
+
+  // REQUEST CLIENT
+  auto client = node->create_client<turtlesim::srv::SetPen>("turtle1/set_pen");
+
+  while (!client->wait_for_service(1s)) {   // Gives the request 1s to search for the service nodes in the network
+    if (!rclcpp::ok()) {
+      RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),      // When Ctrl+C is pressed for cancelling the request
+       "Interrupted while waiting for the service.");
+      return 0;
+	 }
+	 RCLCPP_INFO(rclcpp::get_logger("rclcpp"), 
+     "service not available, waiting again...");
+  }
+
+  auto result = client->async_send_request(request_setpen);
+
+  if (rclcpp::spin_until_future_complete(node, 
+       result) ==	rclcpp::FutureReturnCode::SUCCESS)
+  {
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"),
+      "Pen set correctly.");
+  } else {
+    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), 
+     "Failed to call service set_pen");
+  }
 
   while (rclcpp::ok()) {
     double radius;

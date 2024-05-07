@@ -21,10 +21,11 @@ find_package(rclcpp REQUIRED)
 find_package(example_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(turtlesim REQUIRED)
 
 add_executable(rings src/rings.cpp)
 
-ament_target_dependencies(rings rclcpp example_interfaces std_msgs geometry_msgs)
+ament_target_dependencies(rings rclcpp example_interfaces std_msgs geometry_msgs turtlesim)
 
 install(TARGETS
   rings
