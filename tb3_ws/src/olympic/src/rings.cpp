@@ -46,9 +46,9 @@ int main(int argc, char **argv)
   auto request_setpen = std::make_shared<turtlesim::srv::SetPen::Request>();  
 
   // CHANGE PEN COLOR AND SETTINGS
-  request_setpen->r = colors[3][0]; 
-  request_setpen->g = colors[3][1];
-  request_setpen->b = colors[3][2];
+  request_setpen->r = colors[4][0]; 
+  request_setpen->g = colors[4][1];
+  request_setpen->b = colors[4][2];
   request_setpen->width = 2;
   request_setpen->off = false;
 
@@ -81,8 +81,8 @@ int main(int argc, char **argv)
   auto client_teleport_absolute = node->create_client<turtlesim::srv::TeleportAbsolute>("turtle1/teleport_absolute");
   auto request_teleport_absolute = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
 
-  request_teleport_absolute->x = positions[3][0];
-  request_teleport_absolute->y = positions[3][1];
+  request_teleport_absolute->x = positions[4][0];
+  request_teleport_absolute->y = positions[4][1];
 
   while (!client_teleport_absolute->wait_for_service(1s)) {
     if (!rclcpp::ok()) {
