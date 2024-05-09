@@ -46,7 +46,7 @@ int main(int argc, char **argv)
   auto request_setpen = std::make_shared<turtlesim::srv::SetPen::Request>();  
 
   // CHANGE PEN COLOR AND SETTINGS
-  request_setpen->r = colors[1][0];
+  request_setpen->r = colors[1][0]; 
   request_setpen->g = colors[1][1];
   request_setpen->b = colors[1][2];
   request_setpen->width = 2;
