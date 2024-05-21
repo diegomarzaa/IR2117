@@ -48,3 +48,14 @@ int main(int argc, char * argv[])
   rclcpp::shutdown();
   return 0;
 }
+
+// ros2 run run stats mean
+// ros2 bag play numbers.bag
+// ros2 bag record -o nombre_bag /number /mean
+// ros2 bag info nombre_bag
+
+// ros2 node info
+// - Returns list of subscriptions, publishers, services, and actions.
+
+// ros2 topic info
+// - Returns type, publisher and subscription count.

@@ -25,3 +25,17 @@ int main(int argc, char * argv[])
   rclcpp::shutdown();
   return 0;
 }
+
+
+// source /opt/ros/foxy/setup.bash
+// source install/setup.bash
+// export ROS_LOCALHOST_ONLY=1
+// ros2 pkg create --build-type ament_cmake --node-name sum sum
+// colcon build --packages-select sum
+
+// ros2 run sum sum
+
+// ros2 topic pub /number std_msgs/msg/Int32 "{data: '123'}"
+// ros2 topic echo /sum
+
+// rqt_graph
