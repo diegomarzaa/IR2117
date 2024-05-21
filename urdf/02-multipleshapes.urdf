@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<robot name="multipleshapes">    <!-- Root element, includes all other elements -->
+  <link name="base_link">        <!-- Single rigid part of the robot -->
+    <visual>                     <!-- Defines the visual properties of the link, by default its origin is at the center of the link -->
+      <geometry>                 <!-- Shape -->
+        <cylinder length="0.6" radius="0.2"/> <!-- Cylinder shape with specified length and radius -->
+      </geometry>
+    </visual>
+  </link>
+  
+  <link name="right_leg">        <!-- Another rigid part of the robot -->
+    <visual>                     <!-- Defines the visual properties of the link -->
+      <geometry>                 <!-- Shape -->
+        <box size="0.6 0.1 0.2"/> <!-- 0.6m x 0.1m x 0.2m box shape -->
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="base_to_right_leg" type="fixed">     <!-- Fixed joint connecting base_link and right_leg (parent to child). Tree structure with one root link -->
+    <parent link="base_link"/>   <!-- Parent link of the joint -->
+    <child link="right_leg"/>    <!-- Child link of the joint -->
+  </joint>
+</robot>
+
+<!-- 
+Launch file: 
+
+source /opt/ros/foxy/setup.bash
+export LC_ALL="en_US.UTF-8"
+ros2 launch urdf_tutorial display.launch.py model:=urdf/02-multipleshapes.urdf 
+-->

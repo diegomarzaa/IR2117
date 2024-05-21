@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot name="origins">
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.6" radius="0.2"/>
+      </geometry>
+    </visual>
+  </link>
+  
+  <link name="right_leg">
+    <visual>
+      <geometry>
+        <box size="0.6 0.1 0.2"/>
+      </geometry>
+      <origin rpy="0 1.57075 0" xyz="0 0 -0.3"/>
+      <!-- 
+      Also, it doesn’t attach to the middle of the leg, it attaches to the upper part, so we must offset the origin for the leg as well. We also rotate the leg so it is upright.
+
+      Now, looking at the leg’s visual origin, it has both a xyz and rpy offset. 
+      This defines where the center of the visual element should be, relative to its origin. 
+      Since we want the leg to attach at the top, we offset the origin down by setting the z offset to be -0.3 meters. 
+      And since we want the long part of the leg to be parallel to the z axis, we rotate the visual part PI/2 around the Y axis.
+      -->
+    </visual>
+  </link>
+  
+  <joint name="base_to_right_leg" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_leg"/>
+    <origin xyz="0 -0.22 0.25"/>
+    <!--
+    R2D2’s leg attaches to the top half of his torso, on the side. So that’s where we specify the origin of the JOINT to be. 
+
+    Let’s start by examining the joint’s origin. 
+    It is defined in terms of the parent’s reference frame.
+    So we are -0.22 meters in the y direction (to our left, but to the right relative to the axes) and 0.25 meters in the z direction (up). 
+    This means that the origin for the child link will be up and to the right, regardless of the child link’s visual origin tag. Since we didn’t specify a rpy (roll pitch yaw) attribute, the child frame will be default have the same orientation as the parent frame.
+    -->
+  </joint>
+</robot>
+

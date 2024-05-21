@@ -1,0 +1,40 @@
+<!-- 
+sudo apt install \
+  ros-foxy-joint-state-publisher \
+  ros-foxy-urdf-tutorial
+
+source /opt/ros/foxy/setup.bash
+export LC_ALL="en_US.UTF-8"
+
+ros2 launch urdf_tutorial display.launch.py model:=urdf/01-myfirst.urdf 
+  - Loads the specified model and saves it as a parameter
+  - Runs nodes to publish sensor_msgs/msg/JointState and transforms (more on these later)
+  - Starts Rviz with a configuration file
+
+Independently of the directory:
+  ros2 launch urdf_tutorial display.launch.py model:=`ros2 pkg prefix - -share urdf_tutorial`/urdf/01-myfirst.urdf
+
+El que me funciona a mi:
+  ros2 launch urdf_tutorial display.launch.py model:=`ros2 pkg prefix --share urdf_tutorial`/urdf/06-flexible.urdf
+
+
+ONE SIMPLE SHAPE
+ -->
+
+<?xml version="1.0"?>
+<robot name="myfirst">    <!-- Root element, includes all other elements -->
+  <link name="base_link">  <!-- Single rigid part of the robot -->
+    <visual>              <!-- Defines the visual properties of the link, by default its origin is at the center of the link -->
+      <geometry>          <!-- Shape -->
+        <cylinder length="0.6" radius="0.2"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
+
+<!-- This is a robot with the name “myfirst”, that contains only one link (a.k.a. part), whose visual component is just a cylinder 0.6 meters long with a 0.2 meter radius.
+The fixed frame is the transform frame where the center of the grid is located. 
+Here, it’s a frame defined by our one link, base_link.
+The visual element (the cylinder) has its origin at the center of its geometry as a default. 
+Hence, half the cylinder is below the grid.
+-->
