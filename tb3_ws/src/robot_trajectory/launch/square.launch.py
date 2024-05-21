@@ -7,7 +7,7 @@ def generate_launch_description():
       package='robot_trajectory',
       executable='square_odom',
       # remappings=[
-      #   ('/cmd_vel', '/turtle1/cmd_vel'),
+      #   ('/cmd_vel', '/turtle1/cmd_vel'),           # ros2 run robot_trajectory square_odom --ros-args --remap /cmd_vel:=/turtle1/cmd_vel
       # ],
       parameters=[
         {'linear_speed': 0.6},

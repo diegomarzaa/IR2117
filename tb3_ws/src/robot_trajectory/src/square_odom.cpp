@@ -117,6 +117,7 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
     message.angular.z = 0.0;
     publisher->publish(message);
   }
+  
   // Parar robot
   message.linear.x = 0.0;
   message.angular.z = 0.0;

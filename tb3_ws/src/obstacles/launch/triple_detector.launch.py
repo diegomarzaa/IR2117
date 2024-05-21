@@ -16,6 +16,7 @@ def generate_launch_description():
       ('scan', '/scan')
     ]
     ),
+  
   Node(
     package='obstacles',
     executable='detector',
@@ -28,6 +29,7 @@ def generate_launch_description():
       ('scan', '/scan')
     ]
     ),
+  
   Node(
     package='obstacles',
     executable='detector',
@@ -46,3 +48,6 @@ def generate_launch_description():
     executable='avoidance',
   )
 ])
+
+
+# ros2 launch obstacles triple_detector.launch.py

@@ -32,6 +32,7 @@ void scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
   std::cout << "El valor mínim a l'esquerra és: " << min_esquerra << std::endl;
 }
 
+
 int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter a un array de punter a caràcters
 {
   rclcpp::init(argc, argv);   // Inicialitzar el ROS
@@ -80,3 +81,6 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   rclcpp::shutdown();   // Finalitzar el ROS
   return 0;
 }
+
+// GAZEBO: Back (180), Left (90), Front (0), Right (270)
+// WEBOTS: Back (0), Left (90), Front (180), Right (270)

@@ -75,3 +75,5 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   rclcpp::shutdown();   // Finalitzar el ROS
   return 0;
 }
+
+// ros2 run robot_trajectory square --ros-args --remap /cmd_vel:=/turtle1/cmd_vel --param linear_speed:=0.5 --param angular_speed:=0.5

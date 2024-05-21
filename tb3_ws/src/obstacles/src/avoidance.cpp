@@ -90,3 +90,6 @@ int main(int argc, char * argv[])
   rclcpp::shutdown();
   return 0;
 }
+
+
+// ros2 run obstacles detector --ros-args -r __ns:=/front
