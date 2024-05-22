@@ -70,8 +70,6 @@ int main(int argc, char * argv[])     // argc: nombre d'arguments, argv: punter 
   publisher->publish(message);
   std::cout << "Final del programa" << std::endl;
 
-
-
   rclcpp::shutdown();   // Finalitzar el ROS
   return 0;
 }

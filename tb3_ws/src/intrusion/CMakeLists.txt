@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(robot_trajectory)
+project(intrusion)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -22,32 +22,12 @@ find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
-add_executable(square src/square.cpp)
-add_executable(square_odom src/square_odom.cpp)
-add_executable(wandering src/wandering.cpp)
-add_executable(polygon src/polygon.cpp)
-add_executable(spiral src/spiral.cpp)
-
-
-ament_target_dependencies(square rclcpp geometry_msgs)
-ament_target_dependencies(square_odom rclcpp geometry_msgs nav_msgs)
-ament_target_dependencies(wandering rclcpp geometry_msgs nav_msgs sensor_msgs)
-ament_target_dependencies(polygon rclcpp geometry_msgs)
-ament_target_dependencies(spiral rclcpp geometry_msgs nav_msgs sensor_msgs)
-
+add_executable(monitor src/monitor.cpp)
+ament_target_dependencies(monitor rclcpp geometry_msgs nav_msgs sensor_msgs)
 
 install(TARGETS
-  square
-  square_odom
-  wandering
-  polygon
-  spiral
+  monitor
   DESTINATION lib/${PROJECT_NAME}
-)
-
-install(DIRECTORY
-  launch
-  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
